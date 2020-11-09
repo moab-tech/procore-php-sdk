@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Skeleton\Tests;
+namespace MoabTech\Procore\Tests;
 
 use PHPUnit\Framework\TestCase;
 
