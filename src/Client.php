@@ -6,7 +6,6 @@ use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
-use MoabTech\Procore\Api\ApiResources;
 use MoabTech\Procore\Api\Authentication;
 use MoabTech\Procore\Api\Companies;
 use MoabTech\Procore\Api\Me;
@@ -18,15 +17,6 @@ use MoabTech\Procore\HttpClient\Plugin\ProcoreHeaders;
 
 class Client
 {
-    use ApiResources;
-
-    /**
-     * The company id for the current requests.
-     *
-     * @var companyId
-     */
-    protected $companyId;
-
     /**
      * The default base URL.
      *

@@ -10,6 +10,7 @@ use MoabTech\Procore\Exception\RuntimeException;
 use MoabTech\Procore\HttpClient\Message\ResponseMediator;
 use MoabTech\Procore\HttpClient\Util\JsonArray;
 use MoabTech\Procore\HttpClient\Util\QueryStringBuilder;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use ValueError;
@@ -38,6 +39,13 @@ abstract class AbstractApi implements ApiInterface
     private $perPage;
 
     /**
+     * The page parameter.
+     *
+     * @var int|null
+     */
+    private $page;
+
+    /**
      * Create a new API instance.
      *
      * @param Client   $client
@@ -45,14 +53,19 @@ abstract class AbstractApi implements ApiInterface
      *
      * @return void
      */
-    public function __construct(Client $client, int $perPage = null)
+    public function __construct(Client $client, int $perPage = null, int $page = null)
     {
         if (null !== $perPage && ($perPage < 1 || $perPage > 100)) {
             throw new ValueError(\sprintf('%s::__construct(): Argument #2 ($perPage) must be between 1 and 100, or null', self::class));
         }
 
+        if (null !== $page && $page < 1) {
+            throw new ValueError(\sprintf('%s::__construct(): Argument #3 ($page) must be greater than or equal to 1, or null', self::class));
+        }
+
         $this->client = $client;
         $this->perPage = $perPage;
+        $this->page = $page;
     }
 
     /**
@@ -73,6 +86,16 @@ abstract class AbstractApi implements ApiInterface
     protected function getPerPage()
     {
         return $this->perPage;
+    }
+
+    /**
+     * Get the current page number
+     *
+     * @return int|null
+     */
+    protected function getPage()
+    {
+        return $this->page;
     }
 
     /**
@@ -98,6 +121,28 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
+     * Create a new instance with the given page parameter.
+     *
+     * This must be an integer greater than or equal to 1.
+     *
+     * @param int|null $page
+     *
+     * @return static
+     */
+    public function page(?int $page)
+    {
+        if (null !== $page && $page < 1) {
+            throw new ValueError(\sprintf('%s::page(): Argument #1 ($page) must be greater than or equal to 1, or null', self::class));
+        }
+
+        $copy = clone $this;
+
+        $copy->page = $page;
+
+        return $copy;
+    }
+
+    /**
      * Send a GET request with query params and return the raw response.
      *
      * @param string               $uri
@@ -111,7 +156,11 @@ abstract class AbstractApi implements ApiInterface
     protected function getAsResponse(string $uri, array $params = [], array $headers = [])
     {
         if (null !== $this->perPage && ! isset($params['per_page'])) {
-            $params['per_page'] = $this->perPage;
+            $params = \array_merge(['per_page' => $this->perPage], $params);
+        }
+
+        if (null !== $this->page && ! isset($params['page'])) {
+            $params = \array_merge(['page' => $this->page], $params);
         }
 
         return $this->client->getHttpClient()->get(self::prepareUri($uri, $params), $headers);
@@ -128,7 +177,7 @@ abstract class AbstractApi implements ApiInterface
     {
         $response = $this->getAsResponse($uri, $params, $headers);
 
-        return ResponseMediator::getContent($response);
+        return self::getContent($response);
     }
 
     /**
@@ -155,7 +204,7 @@ abstract class AbstractApi implements ApiInterface
 
         $response = $this->client->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
 
-        return ResponseMediator::getContent($response);
+        return self::getContent($response);
     }
 
     /**
@@ -182,7 +231,7 @@ abstract class AbstractApi implements ApiInterface
 
         $response = $this->client->getHttpClient()->put(self::prepareUri($uri), $headers, $body ?? '');
 
-        return ResponseMediator::getContent($response);
+        return self::getContent($response);
     }
 
     /**
@@ -202,7 +251,7 @@ abstract class AbstractApi implements ApiInterface
 
         $response = $this->client->getHttpClient()->delete(self::prepareUri($uri), $headers, $body ?? '');
 
-        return ResponseMediator::getContent($response);
+        return self::getContent($response);
     }
 
     /**
@@ -402,5 +451,21 @@ abstract class AbstractApi implements ApiInterface
         };
 
         return array_reduce($path, $reduce, $deepArray);
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return stdClass
+     */
+    private static function getContent(ResponseInterface $response)
+    {
+        $content = ResponseMediator::getContent($response);
+
+        if (null === $content) {
+            throw new RuntimeException('No content was provided.');
+        }
+
+        return $content;
     }
 }

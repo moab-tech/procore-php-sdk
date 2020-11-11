@@ -42,7 +42,7 @@ class Companies extends AbstractApi
 
     public function offices()
     {
-        return new Offices($this->getClient(), $this->companyId, $this->getPerPage());
+        return new Offices($this->getClient(), $this->companyId, $this->getPerPage(), $this->getPage());
     }
 
     public function uploads()
