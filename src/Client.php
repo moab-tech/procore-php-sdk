@@ -46,6 +46,13 @@ class Client
     private $responseHistory;
 
     /**
+     * The current access token
+     *
+     * @var array
+     */
+    private $accessToken;
+
+    /**
      * Client constructor.
      *
      * @param Builder
@@ -94,16 +101,33 @@ class Client
     /**
      * Authenticate a user for all next requests.
      *
-     * @param string      $token
+     * @param string|array      $token
      *
      * @return $this
      */
-    public function authenticate(string $token)
+    public function authenticate($accessToken)
     {
+        $this->setAccessToken($accessToken);
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
-        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($token));
+        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->accessToken['access_token']));
 
         return $this;
+    }
+
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    private function setAccessToken(array $accessToken)
+    {
+        if (\is_array($accessToken)) {
+            $this->accessToken = $accessToken;
+        } else {
+            $this->accessToken = [
+                'access_token' => $accessToken,
+            ];
+        }
     }
 
     /**
