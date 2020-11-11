@@ -56,6 +56,26 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
+     * Get the bitbucket client instance.
+     *
+     * @return Client
+     */
+    protected function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Get the number of values to fetch per page.
+     *
+     * @return int|null
+     */
+    protected function getPerPage()
+    {
+        return $this->perPage;
+    }
+
+    /**
      * Create a new instance with the given page parameter.
      *
      * This must be an integer between 1 and 100.
@@ -183,27 +203,6 @@ abstract class AbstractApi implements ApiInterface
         $response = $this->client->getHttpClient()->delete(self::prepareUri($uri), $headers, $body ?? '');
 
         return ResponseMediator::getContent($response);
-    }
-
-    /**
-     * @param int|string $uri
-     *
-     * @return string
-     */
-    protected static function encodePath($uri)
-    {
-        return \rawurlencode((string) $uri);
-    }
-
-    /**
-     * @param int|string $id
-     * @param string     $uri
-     *
-     * @return string
-     */
-    protected function getProjectPath($id, string $uri)
-    {
-        return 'projects/'.self::encodePath($id).'/'.$uri;
     }
 
     /**
@@ -389,5 +388,19 @@ abstract class AbstractApi implements ApiInterface
         $type = $finfo->file($file);
 
         return false !== $type ? $type : ResponseMediator::STREAM_CONTENT_TYPE;
+    }
+
+    /**
+     * helper to get deeply nested array keys
+     */
+    public function getArrayPath(array $path, array $deepArray)
+    {
+        $reduce = function (array $xs, $x) {
+            return (
+            array_key_exists($x, $xs)
+          ) ? $xs[$x] : null;
+        };
+
+        return array_reduce($path, $reduce, $deepArray);
     }
 }

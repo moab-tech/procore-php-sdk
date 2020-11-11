@@ -6,10 +6,8 @@ namespace MoabTech\Procore\Api;
 
 class Me extends AbstractApi
 {
-    public function show(array $params = [])
+    public function show()
     {
-        $resolver = $this->createOptionsResolver();
-
-        return $this->get('me', $resolver->resolve($params));
+        return $this->get('me', []);
     }
 }

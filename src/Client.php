@@ -7,9 +7,9 @@ use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use MoabTech\Procore\Api\ApiResources;
-use MoabTech\Procore\Auth\Authentication;
-use MoabTech\Procore\Config\Configuration;
-use MoabTech\Procore\Exception\ConfigurationException;
+use MoabTech\Procore\Api\Authentication;
+use MoabTech\Procore\Api\Companies;
+use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\HttpClient\Builder;
 use MoabTech\Procore\HttpClient\Plugin\AuthHeaders;
 use MoabTech\Procore\HttpClient\Plugin\ExceptionThrower;
@@ -21,18 +21,11 @@ class Client
     use ApiResources;
 
     /**
-     * The configuration.
+     * The company id for the current requests.
      *
-     * @var Configuration
+     * @var companyId
      */
-    protected $config;
-
-    /**
-     * The access token that holds the data from the response.
-     *
-     * @var Auth\AccessToken
-     */
-    protected $accessToken;
+    protected $companyId;
 
     /**
      * The default base URL.
@@ -65,14 +58,12 @@ class Client
     /**
      * Client constructor.
      *
-     * @param array $config
      * @param Builder
      *
      * @throws Exception
      */
-    public function __construct(array $config = [], Builder $httpClientBuilder = null)
+    public function __construct(Builder $httpClientBuilder = null)
     {
-        $this->config = new Configuration($config);
         $this->httpClientBuilder = $builder = $httpClientBuilder ?? new Builder();
         $this->responseHistory = new History();
 
@@ -83,45 +74,31 @@ class Client
         ]));
         $builder->addPlugin(new RedirectPlugin());
 
-        $authentication = new Authentication($this->client, $this->appConfig);
-        $this->accessToken = $authentication->getToken();
-        $this->authenticate($this->accessToken->getValue());
-
         $this->setUrl(self::BASE_URL);
     }
 
     /**
-     * Returns the access token.
-     *
-     * @return Authentication\AccessToken
-     */
-    public function getAccessToken()
+    * @return Authentication
+    */
+    public function authentication($clientId, $clientSecret)
     {
-        return $this->accessToken;
+        return new Authentication($this, $clientId, $clientSecret);
     }
 
     /**
-     * Refresh the access token.
-     *
-     * @param string $refreshToken
-     *
-     * @return Authentication\AccessToken
-     *
-     * @throws ConfigurationException
+     * @return Me
      */
-    public function refreshToken($refreshToken = null)
+    public function me()
     {
-        if (isset($refreshToken)) {
-            $rToken = $refreshToken;
-        } elseif (! isset($refreshToken) && ! isset($this->accessToken)) {
-            throw new ConfigurationException('There is no refresh token');
-        } else {
-            $rToken = $this->accessToken->getRefreshToken();
-        }
-        $authentication = new Authentication($this->client, $this->appConfig);
-        $this->accessToken = $authentication->refreshToken($rToken);
+        return new Me($this);
+    }
 
-        return $this->accessToken;
+    /**
+     * @return Companies
+     */
+    public function companies(?int $companyId = null)
+    {
+        return new Companies($this, $companyId);
     }
 
     /**
@@ -146,14 +123,13 @@ class Client
      *
      * @return $this
      */
-    public function forCompany(int $companyId)
+    public function forCompany(?int $companyId = null)
     {
-        if ($this->config->getGrantType() !== 'client_credentials') {
-            $this->getHttpClientBuilder()->removePlugin(ProcoreHeaders::class);
+        $this->getHttpClientBuilder()->removePlugin(ProcoreHeaders::class);
+
+        if ($companyId) {
             $this->getHttpClientBuilder()->addPlugin(new ProcoreHeaders($companyId));
         }
-
-        $this->companyId = $companyId;
 
         return $this;
     }

@@ -1,10 +1,8 @@
 <?php
 
-namespace MoabTech\Procore\Auth;
+namespace MoabTech\Procore\Api;
 
-use MoabTech\Procore\Api\AbstractApi;
 use MoabTech\Procore\Client;
-use MoabTech\Procore\Config\ConfigurationInterface;
 use MoabTech\Procore\Exception\MissingArgumentException;
 
 class Authentication extends AbstractApi
@@ -15,9 +13,14 @@ class Authentication extends AbstractApi
     protected $client;
 
     /**
-     * The application's configuration.
+     * The clientId.
      */
-    protected $config;
+    protected $clientId;
+
+    /**
+     * The clientSecret.
+     */
+    protected $clientSecret;
 
     /**
      * The default auth URL.
@@ -29,52 +32,16 @@ class Authentication extends AbstractApi
     /**
      * Authorization constructor.
      *
-     * @param SumUpHttpClientInterface $client
-     * @param ApplicationConfigurationInterface $config
+     * @param HttpClientInterface $client
+     * @param string $clientId
+     * @param string $clientSecret
      */
-    public function __construct(Client $client, ConfigurationInterface $config)
+    public function __construct(Client $client, $clientId, $clientSecret)
     {
         $this->client = $client;
-        $this->config = $config;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
         $this->client->setUrl(static::AUTH_URL);
-    }
-
-    /**
-     * Returns an access token according to the grant_type.
-     *
-     * @return null|AccessToken
-     */
-    public function getToken()
-    {
-        $accessToken = null;
-        if (! empty($this->config->getAccessToken())) {
-            $accessToken = new AccessToken(
-                $this->config->getAccessToken(),
-                '',
-                0,
-                $this->config->getRefreshToken()
-            );
-        } elseif (! empty($this->config->getRefreshToken())) {
-            $accessToken = new AccessToken(
-                '',
-                '',
-                0,
-                $this->config->getRefreshToken()
-            );
-        } else {
-            switch ($this->config->getGrantType()) {
-                case 'authorization_code':
-                    $accessToken = $this->getTokenByCode();
-
-                    break;
-                case 'client_credentials':
-                    $accessToken = $this->getTokenByClientCredentials();
-
-                    break;
-            }
-        }
-
-        return $accessToken;
     }
 
     /**
@@ -82,17 +49,19 @@ class Authentication extends AbstractApi
      *
      * @return AccessToken
      */
-    public function getTokenByCode()
+    public function getTokenByCode($code)
     {
-        $payload = [
+        if (empty($code)) {
+            throw new MissingArgumentException('Missing code parameter.');
+        }
+        $params = [
             'grant_type' => 'authorization_code',
-            'client_id' => $this->config->getClientId(),
-            'client_secret' => $this->config->getClientSecret(),
-            'code' => $this->config->getCode(),
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'code' => $code,
         ];
-        $response = $this->post('/oauth/token', $payload);
 
-        return new AccessToken($response->access_token, $response->token_type, $response->expires_in, $response->refresh_token);
+        return $this->post('/oauth/token', $params);
     }
 
     /**
@@ -104,12 +73,11 @@ class Authentication extends AbstractApi
     {
         $payload = [
             'grant_type' => 'client_credentials',
-            'client_id' => $this->config->getClientId(),
-            'client_secret' => $this->config->getClientSecret(),
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
         ];
-        $response = $this->post('/oauth/token', $payload);
 
-        return new AccessToken($response->access_token, $response->token_type, $response->expires_in);
+        return $this->post('/oauth/token', $payload);
     }
 
     /**
@@ -126,12 +94,11 @@ class Authentication extends AbstractApi
         }
         $payload = [
             'grant_type' => 'refresh_token',
-            'client_id' => $this->config->getClientId(),
-            'client_secret' => $this->config->getClientSecret(),
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
             'refresh_token' => $refreshToken,
         ];
-        $response = $this->post('/oauth/token', $payload);
 
-        return new AccessToken($response->access_token, $response->token_type, $response->expires_in, $response->refresh_token);
+        return $this->post('/oauth/token', $payload);
     }
 }
