@@ -1,11 +1,6 @@
 # Procore PHP SDK
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/moab-tech/procore-php-sdk.svg?style=flat-square)](https://packagist.org/packages/moab-tech/procore-php-sdk)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/moab-tech/procore-php-sdk/run-tests?label=tests)](https://github.com/moab-tech/procore-php-sdk/actions?query=workflow%3Arun-tests+branch%3Amaster)
-[![Total Downloads](https://img.shields.io/packagist/dt/moab-tech/procore-php-sdk.svg?style=flat-square)](https://packagist.org/packages/moab-tech/procore-php-sdk)
-
-
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+NOTICE!! This is very much a work in progress.  Only a few endpoints are available and there are no tests.  Use at your own risk.
 
 ## Installation
 
@@ -18,14 +13,12 @@ composer require moab-tech/procore-php-sdk
 ## Usage
 
 ``` php
-$skeleton = new MoabTech\Procore();
+$procore = new MoabTech\Procore();
 ```
 
 ## Testing
 
-``` bash
-composer test
-```
+Coming Soon!
 
 ## Changelog
 
