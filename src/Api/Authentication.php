@@ -38,6 +38,8 @@ class Authentication extends AbstractApi
      */
     public function __construct(Client $client, $clientId, $clientSecret)
     {
+        var_dump($client);
+        die();
         $this->client = $client;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
