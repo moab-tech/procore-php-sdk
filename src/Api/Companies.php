@@ -27,9 +27,9 @@ class Companies extends AbstractApi
      *
      * @return void
      */
-    public function __construct(Client $client, ?string $companyId = null, int $perPage = null)
+    public function __construct(Client $client, ?string $companyId = null, int $perPage = null, int $page = null)
     {
-        parent::__construct($client, $perPage);
+        parent::__construct($client, $perPage, $page);
         $this->companyId = $companyId;
     }
 

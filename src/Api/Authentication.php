@@ -8,11 +8,6 @@ use MoabTech\Procore\Exception\MissingArgumentException;
 class Authentication extends AbstractApi
 {
     /**
-     * The client for the http communication.
-     */
-    protected $client;
-
-    /**
      * The clientId.
      */
     protected $clientId;
@@ -38,12 +33,10 @@ class Authentication extends AbstractApi
      */
     public function __construct(Client $client, $clientId, $clientSecret)
     {
-        var_dump($client);
-        die();
-        $this->client = $client;
+        parent::__construct($client);
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->client->setUrl(static::AUTH_URL);
+        $this->getClient()->setUrl(static::AUTH_URL);
     }
 
     /**

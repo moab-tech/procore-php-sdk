@@ -69,7 +69,7 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * Get the bitbucket client instance.
+     * Get the procore client instance.
      *
      * @return Client
      */
@@ -163,7 +163,7 @@ abstract class AbstractApi implements ApiInterface
             $params = \array_merge(['page' => $this->page], $params);
         }
 
-        return $this->client->getHttpClient()->get(self::prepareUri($uri, $params), $headers);
+        return $this->getClient()->getHttpClient()->get(self::prepareUri($uri, $params), $headers);
     }
 
     /**
@@ -202,7 +202,7 @@ abstract class AbstractApi implements ApiInterface
             }
         }
 
-        $response = $this->client->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
+        $response = $this->getClient()->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
 
         return self::getContent($response);
     }
@@ -229,7 +229,7 @@ abstract class AbstractApi implements ApiInterface
             }
         }
 
-        $response = $this->client->getHttpClient()->put(self::prepareUri($uri), $headers, $body ?? '');
+        $response = $this->getClient()->getHttpClient()->put(self::prepareUri($uri), $headers, $body ?? '');
 
         return self::getContent($response);
     }
@@ -249,7 +249,7 @@ abstract class AbstractApi implements ApiInterface
             $headers = self::addJsonContentType($headers);
         }
 
-        $response = $this->client->getHttpClient()->delete(self::prepareUri($uri), $headers, $body ?? '');
+        $response = $this->getClient()->getHttpClient()->delete(self::prepareUri($uri), $headers, $body ?? '');
 
         return self::getContent($response);
     }
@@ -305,7 +305,7 @@ abstract class AbstractApi implements ApiInterface
      */
     private function createMultipartStreamBuilder(array $params = [], array $files = [])
     {
-        $builder = new MultipartStreamBuilder($this->client->getStreamFactory());
+        $builder = new MultipartStreamBuilder($this->getClient()->getStreamFactory());
 
         foreach ($params as $name => $value) {
             $builder->addResource($name, $value);
