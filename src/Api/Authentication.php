@@ -37,6 +37,8 @@ class Authentication extends AbstractApi
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->getClient()->setUrl(static::AUTH_URL);
+
+        var_export($this->getClient());
     }
 
     /**
