@@ -5,7 +5,7 @@ namespace MoabTech\Procore\Api;
 use MoabTech\Procore\Client;
 use MoabTech\Procore\Exception\MissingArgumentException;
 
-class Authentication extends AbstractApi
+class Oauth extends AbstractApi
 {
     /**
      * The clientId.

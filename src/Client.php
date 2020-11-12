@@ -6,9 +6,9 @@ use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
-use MoabTech\Procore\Api\Authentication;
 use MoabTech\Procore\Api\Companies;
 use MoabTech\Procore\Api\Me;
+use MoabTech\Procore\Api\Oauth;
 use MoabTech\Procore\HttpClient\Builder;
 use MoabTech\Procore\HttpClient\Plugin\AuthHeaders;
 use MoabTech\Procore\HttpClient\Plugin\ExceptionThrower;
@@ -41,7 +41,7 @@ class Client
     /**
      * The current access token
      *
-     * @var array
+     * @var AccessToken
      */
     private $accessToken;
 
@@ -66,11 +66,11 @@ class Client
     }
 
     /**
-    * @return Authentication
+    * @return Oauth
     */
-    public function authentication($clientId, $clientSecret)
+    public function oauth($clientId, $clientSecret)
     {
-        return new Authentication($this, $clientId, $clientSecret);
+        return new Oauth($this, $clientId, $clientSecret);
     }
 
     /**
@@ -96,11 +96,12 @@ class Client
      *
      * @return $this
      */
-    public function withToken($accessToken)
+    public function authenticate($accessToken)
     {
         $this->setAccessToken($accessToken);
+        $token = $this->getAccessToken()->getValue();
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
-        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->accessToken['access_token']));
+        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($token));
 
         return $this;
     }
@@ -113,11 +114,11 @@ class Client
     private function setAccessToken($accessToken)
     {
         if (\is_array($accessToken)) {
-            $this->accessToken = $accessToken;
+            $this->accessToken = new AccessToken($accessToken);
         } else {
-            $this->accessToken = [
+            $this->accessToken = new AccessToken([
                 'access_token' => $accessToken,
-            ];
+            ]);
         }
     }
 
