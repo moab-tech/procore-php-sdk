@@ -9,7 +9,7 @@ use MoabTech\Procore\HttpClient\Message\ResponseMediator;
 use MoabTech\Procore\HttpClient\Util\JsonArray;
 use Psr\Http\Message\ResponseInterface;
 
-class Authentication extends AbstractApi
+class Authentication
 {
     /**
      * The client instance.
