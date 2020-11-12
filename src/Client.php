@@ -113,7 +113,9 @@ class Client
 
     private function setAccessToken($accessToken)
     {
-        if (\is_array($accessToken)) {
+        if ($accessToken instanceof AccessToken) {
+            $this->accessToken = $accessToken;
+        } elseif (\is_array($accessToken)) {
             $this->accessToken = new AccessToken($accessToken);
         } else {
             $this->accessToken = new AccessToken([
