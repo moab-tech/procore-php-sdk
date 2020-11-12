@@ -96,7 +96,7 @@ class Client
      *
      * @return $this
      */
-    public function authenticate($accessToken)
+    public function withToken($accessToken)
     {
         $this->setAccessToken($accessToken);
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
@@ -110,7 +110,7 @@ class Client
         return $this->accessToken;
     }
 
-    private function setAccessToken(array $accessToken)
+    private function setAccessToken($accessToken)
     {
         if (\is_array($accessToken)) {
             $this->accessToken = $accessToken;

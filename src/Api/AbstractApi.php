@@ -46,6 +46,13 @@ abstract class AbstractApi implements ApiInterface
     private $page;
 
     /**
+     * The URI prefix for this api
+     *
+     * @var int|null
+     */
+    private $prefix = '/vapid/';
+
+    /**
      * Create a new API instance.
      *
      * @param Client   $client
@@ -67,7 +74,15 @@ abstract class AbstractApi implements ApiInterface
         $this->perPage = $perPage;
         $this->page = $page;
 
-        $this->getClient()->setUrl(static::BASE_URL);
+        $this->getClient()->setUrl(self::BASE_URL);
+    }
+
+    /**
+     * set the prefix
+     */
+    protected function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
     }
 
     /**
@@ -98,6 +113,16 @@ abstract class AbstractApi implements ApiInterface
     protected function getPage()
     {
         return $this->page;
+    }
+
+    /**
+     * Get the prefix for this api
+     *
+     * @return int|null
+     */
+    protected function getPrefix()
+    {
+        return $this->prefix;
     }
 
     /**
@@ -165,7 +190,7 @@ abstract class AbstractApi implements ApiInterface
             $params = \array_merge(['page' => $this->page], $params);
         }
 
-        return $this->getClient()->getHttpClient()->get(self::prepareUri($uri, $params), $headers);
+        return $this->getClient()->getHttpClient()->get($this->prepareUri($uri, $params), $headers);
     }
 
     /**
@@ -204,7 +229,7 @@ abstract class AbstractApi implements ApiInterface
             }
         }
 
-        $response = $this->getClient()->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
+        $response = $this->getClient()->getHttpClient()->post($this->prepareUri($uri), $headers, $body);
 
         return self::getContent($response);
     }
@@ -231,7 +256,7 @@ abstract class AbstractApi implements ApiInterface
             }
         }
 
-        $response = $this->getClient()->getHttpClient()->put(self::prepareUri($uri), $headers, $body ?? '');
+        $response = $this->getClient()->getHttpClient()->put($this->prepareUri($uri), $headers, $body ?? '');
 
         return self::getContent($response);
     }
@@ -251,7 +276,7 @@ abstract class AbstractApi implements ApiInterface
             $headers = self::addJsonContentType($headers);
         }
 
-        $response = $this->getClient()->getHttpClient()->delete(self::prepareUri($uri), $headers, $body ?? '');
+        $response = $this->getClient()->getHttpClient()->delete($this->prepareUri($uri), $headers, $body ?? '');
 
         return self::getContent($response);
     }
@@ -288,15 +313,13 @@ abstract class AbstractApi implements ApiInterface
      *
      * @return string
      */
-    private static function prepareUri(string $uri, array $query = [])
+    private function prepareUri(string $uri, array $query = [])
     {
         $query = \array_filter($query, function ($value): bool {
             return null !== $value;
         });
 
-        $prefix = $this->uriPrefix;
-
-        return \sprintf('%s%s%s', $prefix, $uri, QueryStringBuilder::build($query));
+        return \sprintf('%s%s%s', $this->getPrefix(), $uri, QueryStringBuilder::build($query));
     }
 
     /**
