@@ -87,7 +87,7 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params);
 
-        return new AccessToken($resBody->access_token, $resBody->token_type, $resBody->expires_in, $resBody->refresh_token);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
     }
 
     /**
@@ -105,7 +105,7 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params);
 
-        return new AccessToken($resBody->access_token, $resBody->token_type, $resBody->expires_in);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in']);
     }
 
     /**
@@ -129,6 +129,6 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params);
 
-        return new AccessToken($resBody->access_token, $resBody->token_type, $resBody->expires_in, $resBody->refresh_token);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
     }
 }
