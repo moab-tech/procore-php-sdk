@@ -4,7 +4,6 @@ namespace MoabTech\Procore\Api;
 
 use MoabTech\Procore\AccessToken;
 use MoabTech\Procore\Client;
-use MoabTech\Procore\Config\ConfigurationInterface;
 use MoabTech\Procore\Exception\MissingArgumentException;
 
 class Oauth extends AbstractApi
@@ -28,10 +27,10 @@ class Oauth extends AbstractApi
      * @param string $clientId
      * @param string $clientSecret
      */
-    public function __construct(Client $client, ConfigurationInterface $config)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
-        $this->config = $config;
+        $this->config = $client->config;
         $this->getClient()->setUrl(static::AUTH_URL);
         $this->setPrefix('/');
     }
@@ -100,7 +99,7 @@ class Oauth extends AbstractApi
     {
         $params = [
             'grant_type' => 'client_credentials',
-            'client_id' => $this->config->getClientSecret(),
+            'client_id' => $this->config->getClientId(),
             'client_secret' => $this->config->getClientSecret(),
         ];
 
