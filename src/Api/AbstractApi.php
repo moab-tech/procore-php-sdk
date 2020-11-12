@@ -163,8 +163,6 @@ abstract class AbstractApi implements ApiInterface
             $params = \array_merge(['page' => $this->page], $params);
         }
 
-        var_export(self::prepareUri($uri, $params));
-
         return $this->getClient()->getHttpClient()->get(self::prepareUri($uri, $params), $headers);
     }
 
@@ -203,6 +201,8 @@ abstract class AbstractApi implements ApiInterface
                 $headers = self::addJsonContentType($headers);
             }
         }
+
+        var_export(self::prepareUri($uri, $params));
 
         $response = $this->getClient()->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
 
