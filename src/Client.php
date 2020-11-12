@@ -9,6 +9,8 @@ use Http\Client\Common\Plugin\RedirectPlugin;
 use MoabTech\Procore\Api\Companies;
 use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\Api\Oauth;
+use MoabTech\Procore\Config\Configuration;
+use MoabTech\Procore\Exception\ConfigurationException;
 use MoabTech\Procore\HttpClient\Builder;
 use MoabTech\Procore\HttpClient\Plugin\AuthHeaders;
 use MoabTech\Procore\HttpClient\Plugin\ExceptionThrower;
@@ -52,8 +54,9 @@ class Client
      *
      * @throws Exception
      */
-    public function __construct(Builder $httpClientBuilder = null)
+    public function __construct(array $config = [], Builder $httpClientBuilder = null)
     {
+        $this->config = new Configuration($config);
         $this->httpClientBuilder = $builder = $httpClientBuilder ?? new Builder();
         $this->responseHistory = new History();
 
@@ -68,9 +71,9 @@ class Client
     /**
     * @return Oauth
     */
-    public function oauth($clientId, $clientSecret)
+    public function oauth()
     {
-        return new Oauth($this, $clientId, $clientSecret);
+        return new Oauth($this, $this->config);
     }
 
     /**
@@ -92,16 +95,21 @@ class Client
     /**
      * Authenticate a user for all next requests.
      *
-     * @param string|array      $token
+     * @param string      $token
      *
      * @return $this
      */
-    public function authenticate($accessToken)
+    public function authenticate(string $token = null)
     {
-        $this->setAccessToken($accessToken);
-        $token = $this->getAccessToken()->getValue();
+        if ($token) {
+            $this->accessToken = new AccessToken($token);
+        } elseif ($this->getAccessToken() instanceof AccessToken) {
+        } else {
+            $this->accessToken = $this->oauth()->getToken();
+        }
+
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
-        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($token));
+        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()->getValue()));
 
         return $this;
     }
@@ -109,19 +117,6 @@ class Client
     public function getAccessToken()
     {
         return $this->accessToken;
-    }
-
-    private function setAccessToken($accessToken)
-    {
-        if ($accessToken instanceof AccessToken) {
-            $this->accessToken = $accessToken;
-        } elseif (\is_array($accessToken)) {
-            $this->accessToken = new AccessToken($accessToken);
-        } else {
-            $this->accessToken = new AccessToken([
-                'access_token' => $accessToken,
-            ]);
-        }
     }
 
     /**
@@ -155,6 +150,29 @@ class Client
         $this->getHttpClientBuilder()->addPlugin(new AddHostPlugin($uri));
 
         return $this;
+    }
+
+    /**
+     * Refresh the access token.
+     *
+     * @param string $refreshToken
+     *
+     * @return Authentication\AccessToken
+     *
+     * @throws ConfigurationException
+     */
+    public function refreshToken($refreshToken = null)
+    {
+        if (isset($refreshToken)) {
+            $rToken = $refreshToken;
+        } elseif (! isset($refreshToken) && ! isset($this->accessToken)) {
+            throw new ConfigurationException('There is no refresh token');
+        } else {
+            $rToken = $this->accessToken->getRefreshToken();
+        }
+        $this->accessToken = $this->oauth->refreshToken($rToken);
+
+        return $this->accessToken;
     }
 
     /**

@@ -2,13 +2,6 @@
 
 namespace MoabTech\Procore;
 
-use MoabTech\Procore\Exception\MissingArgumentException;
-
-/**
- * Class AccessToken
- *
- * @package SumUp\Authentication
- */
 class AccessToken
 {
     /**
@@ -44,15 +37,20 @@ class AccessToken
      *
      * @param array $token
      */
-    public function __construct(array $token = [])
+    public function __construct($value, $type = '', $expiresIn = -1, $refreshToken = null)
     {
-        if (! array_key_exists('access_token', $token)) {
-            throw new MissingArgumentException('An access token is required');
-        } else {
-            $this->value = $token['access_token'];
-            $this->refreshToken = array_key_exists('refresh_token', $token) ? $token['refresh_token'] : null;
-            $this->type = array_key_exists('type', $token) ? $token['type'] : null;
-            $this->setExpires($token);
+        if ($value) {
+            $this->value = $value;
+        }
+        if ($type) {
+            $this->type = $type;
+        }
+        if ($expiresIn) {
+            $this->expires = time() + $expiresIn;
+        }
+
+        if ($refreshToken) {
+            $this->refreshToken = $refreshToken;
         }
     }
 
@@ -94,14 +92,5 @@ class AccessToken
     public function getRefreshToken()
     {
         return $this->refreshToken;
-    }
-
-    public function setExpires(array $token)
-    {
-        if (! array_key_exists('expires_in', $token)) {
-            $this->expires = 0;
-        }
-
-        $this->expires = time() + $token['expires_in'];
     }
 }
