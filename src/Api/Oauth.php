@@ -81,9 +81,9 @@ class Oauth extends AbstractApi
         }
         $params = [
             'grant_type' => 'authorization_code',
-            'client_id' => $this->config->clientId,
-            'client_secret' => $this->config->clientSecret,
-            'code' => $this->config->code,
+            'client_id' => $this->config->getClientId(),
+            'client_secret' => $this->config->getClientSecret(),
+            'code' => $this->config->getCode(),
         ];
 
         $resBody = $this->post('oauth/token', $params);
@@ -100,8 +100,8 @@ class Oauth extends AbstractApi
     {
         $params = [
             'grant_type' => 'client_credentials',
-            'client_id' => $this->config->clientId,
-            'client_secret' => $this->config->clientSecret,
+            'client_id' => $this->config->getClientSecret(),
+            'client_secret' => $this->config->getClientSecret(),
         ];
 
         $resBody = $this->post('oauth/token', $params);
@@ -123,9 +123,9 @@ class Oauth extends AbstractApi
         }
         $params = [
             'grant_type' => 'refresh_token',
-            'client_id' => $this->config->clientId,
-            'client_secret' => $this->config->clientSecret,
-            'refresh_token' => $this->config->refreshToken,
+            'client_id' => $this->config->getClientId(),
+            'client_secret' => $this->config->getClientSecret(),
+            'refresh_token' => $this->config->getRefreshToken(),
         ];
 
         $resBody = $this->post('oauth/token', $params);
