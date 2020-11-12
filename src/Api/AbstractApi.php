@@ -18,11 +18,11 @@ use ValueError;
 abstract class AbstractApi implements ApiInterface
 {
     /**
-     * The URI prefix.
+     * The default base URL.
      *
      * @var string
      */
-    private const URI_PREFIX = '/vapid/';
+    private const BASE_URL = 'https://api.procore.com';
 
     /**
      * The client instance.
@@ -66,6 +66,8 @@ abstract class AbstractApi implements ApiInterface
         $this->client = $client;
         $this->perPage = $perPage;
         $this->page = $page;
+
+        $this->getClient()->setUrl(static::BASE_URL);
     }
 
     /**
@@ -292,7 +294,9 @@ abstract class AbstractApi implements ApiInterface
             return null !== $value;
         });
 
-        return \sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
+        $prefix = $this->uriPrefix;
+
+        return \sprintf('%s%s%s', $prefix, $uri, QueryStringBuilder::build($query));
     }
 
     /**

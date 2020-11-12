@@ -18,13 +18,6 @@ use MoabTech\Procore\HttpClient\Plugin\ProcoreHeaders;
 class Client
 {
     /**
-     * The default base URL.
-     *
-     * @var string
-     */
-    private const BASE_URL = 'https://api.procore.com';
-
-    /**
      * The default user agent header.
      *
      * @var string
@@ -70,8 +63,6 @@ class Client
             'User-Agent' => self::USER_AGENT,
         ]));
         $builder->addPlugin(new RedirectPlugin());
-
-        $this->setUrl(self::BASE_URL);
     }
 
     /**

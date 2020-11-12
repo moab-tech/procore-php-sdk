@@ -12,6 +12,13 @@ use MoabTech\Procore\Client;
 class Companies extends AbstractApi
 {
     /**
+     * The URI prefix.
+     *
+     * @var string
+     */
+    protected const URI_PREFIX = '/vapid/';
+
+    /**
      * The company.
      *
      * @var string|null
