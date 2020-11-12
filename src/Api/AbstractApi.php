@@ -202,8 +202,6 @@ abstract class AbstractApi implements ApiInterface
             }
         }
 
-        var_export(self::prepareUri($uri, $params));
-
         $response = $this->getClient()->getHttpClient()->post(self::prepareUri($uri), $headers, $body);
 
         return self::getContent($response);
