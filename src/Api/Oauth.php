@@ -47,7 +47,7 @@ class Oauth extends AbstractApi
         } else {
             switch ($this->config->getGrantType()) {
                 case 'authorization_code':
-                    $accessToken = $this->getTokenByCode($this->config->code, $headers);
+                    $accessToken = $this->getTokenByCode($headers);
 
                     break;
                 case 'client_credentials':
@@ -67,7 +67,7 @@ class Oauth extends AbstractApi
      */
     public function getTokenByCode(array $headers = [])
     {
-        if (empty($this->config->code)) {
+        if (empty($this->config->getCode())) {
             throw new MissingArgumentException('Missing code parameter.');
         }
         $params = [

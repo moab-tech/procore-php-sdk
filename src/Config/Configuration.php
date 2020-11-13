@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
     /**
      * The authorization code.
      *
-     * @var string
+     * @var string|null
      */
     protected $code;
 
@@ -132,7 +132,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Returns authorization code.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getCode()
     {
