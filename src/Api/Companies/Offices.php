@@ -20,10 +20,10 @@ class Offices extends AbstractCompaniesApi
     public function create(array $params = [], array $headers = [])
     {
         if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->post('offices', $params, $headers, ['logo' => $logo]);
+            return $this->post('offices', $this->buildParams($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->post('offices', $params, $headers, []);
+        return $this->post('offices', $this->buildParams($params), $headers, []);
     }
 
     public function show(int $id, array $params = [], array $headers = [])
@@ -40,10 +40,10 @@ class Offices extends AbstractCompaniesApi
         $uri = $this->buildUri((string) $id);
 
         if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->put($uri, $params, $headers, ['logo' => $logo]);
+            return $this->put($uri, $this->buildParams($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->put($uri, $params, $headers, []);
+        return $this->put($uri, $this->buildParams($params), $headers, []);
     }
 
     public function delete(int $id, array $params = [], array $headers = [])
@@ -65,5 +65,10 @@ class Offices extends AbstractCompaniesApi
     protected function buildUri(string ...$parts)
     {
         return UriBuilder::build('offices', ...$parts);
+    }
+
+    protected function buildParams($params)
+    {
+        return ['office' => $params, 'company_id' => $this->companyId];
     }
 }
