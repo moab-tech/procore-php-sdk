@@ -24,7 +24,6 @@ class Oauth extends AbstractApi
     {
         parent::__construct($client);
         $this->config = $client->getConfig();
-        $client->setUrl($this->config->getAuthUrl());
         $this->setPrefix('/');
     }
 

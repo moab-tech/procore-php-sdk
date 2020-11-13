@@ -66,8 +66,6 @@ abstract class AbstractApi implements ApiInterface
         $this->client = $client;
         $this->perPage = $perPage;
         $this->page = $page;
-
-        $this->client->setUrl($this->client->getConfig()->getBaseUrl());
     }
 
     /**

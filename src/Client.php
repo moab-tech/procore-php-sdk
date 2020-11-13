@@ -74,16 +74,7 @@ class Client
         ]));
         $builder->addPlugin(new RedirectPlugin());
 
-        $this->setUrl($this->config->getBaseUrl());
         $this->authenticate();
-    }
-
-    /**
-    * @return Oauth
-    */
-    public function oauth()
-    {
-        return new Oauth($this);
     }
 
     /**
@@ -109,10 +100,15 @@ class Client
      */
     public function authenticate()
     {
-        $this->accessToken = $this->oauth()->getToken();
+        $this->setUrl($this->config->getAuthUrl());
+
+        $authService = new Oauth($this);
+        $this->accessToken = $authService->getToken();
 
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
         $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()->getValue()));
+
+        $this->setUrl($this->config->getBaseUrl());
 
         return $this;
     }
