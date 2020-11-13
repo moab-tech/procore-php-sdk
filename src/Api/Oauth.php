@@ -78,7 +78,7 @@ class Oauth extends AbstractApi
             'redirect_uri' => $this->config->getRedirect(),
         ];
 
-        $resBody = $this->post('oauth/token', $params, $headers, []);
+        $resBody = $this->post('oauth/token', $params, $headers);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
     }
@@ -96,7 +96,7 @@ class Oauth extends AbstractApi
             'client_secret' => $this->config->getClientSecret(),
         ];
 
-        $resBody = $this->post('oauth/token', $params, $headers, []);
+        $resBody = $this->post('oauth/token', $params, $headers);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']));
     }
@@ -120,7 +120,7 @@ class Oauth extends AbstractApi
             'refresh_token' => $this->config->getRefreshToken(),
         ];
 
-        $resBody = $this->post('oauth/token', $params, $headers, []);
+        $resBody = $this->post('oauth/token', $params, $headers);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
     }

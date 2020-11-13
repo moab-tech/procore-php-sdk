@@ -12,7 +12,7 @@ class ConstructionVolume extends AbstractCompaniesApi
     {
         $uri = $this->buildUri('urgent_error');
 
-        return $this->post($uri, $params, [], []);
+        return $this->post($uri, $params);
     }
 
     /**

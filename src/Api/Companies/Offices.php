@@ -23,7 +23,7 @@ class Offices extends AbstractCompaniesApi
             return $this->post('offices', $this->buildParams($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->post('offices', $this->buildParams($params), $headers, []);
+        return $this->post('offices', $this->buildParams($params), $headers);
     }
 
     public function show(int $id, array $params = [], array $headers = [])
@@ -43,7 +43,7 @@ class Offices extends AbstractCompaniesApi
             return $this->put($uri, $this->buildParams($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->put($uri, $this->buildParams($params), $headers, []);
+        return $this->put($uri, $this->buildParams($params), $headers);
     }
 
     public function delete(int $id, array $params = [], array $headers = [])
