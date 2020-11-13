@@ -57,6 +57,13 @@ class Configuration implements ConfigurationInterface
     protected $refreshToken;
 
     /**
+     * token expires in seconds
+     *
+     * @var null|int
+     */
+    protected $expires;
+
+    /**
      * The base url
      *
      * @var null|string
@@ -86,6 +93,7 @@ class Configuration implements ConfigurationInterface
             'code' => null,
             'access_token' => null,
             'refresh_token' => null,
+            'expires' => 0,
             'base_url' => 'https://api.procore.com',
             'auth_url' => 'https://login.procore.com',
         ], $config);
@@ -96,6 +104,7 @@ class Configuration implements ConfigurationInterface
         $this->code = $config['code'];
         $this->accessToken = $config['access_token'];
         $this->refreshToken = $config['refresh_token'];
+        $this->expires = $config['expires'];
         $this->baseUrl = $config['base_url'];
         $this->authUrl = $config['auth_url'];
     }
@@ -158,6 +167,16 @@ class Configuration implements ConfigurationInterface
     public function getRefreshToken()
     {
         return $this->refreshToken;
+    }
+
+    /**
+     * Returns when token expires
+     *
+     * @return null|int
+     */
+    public function getExpires()
+    {
+        return $this->expires;
     }
 
     /**

@@ -35,14 +35,14 @@ class Oauth extends AbstractApi
             $accessToken = new AccessToken(
                 $this->config->getAccessToken(),
                 '',
-                0,
+                $this->config->getExpires(),
                 $this->config->getRefreshToken()
             );
         } elseif (! empty($this->config->getRefreshToken())) {
             $accessToken = new AccessToken(
                 '',
                 '',
-                0,
+                $this->config->getExpires(),
                 $this->config->getRefreshToken()
             );
         } else {
@@ -80,7 +80,7 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers, []);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
     }
 
     /**
@@ -98,7 +98,7 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers, []);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in']);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']));
     }
 
     /**
@@ -122,6 +122,11 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers, []);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
+        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
+    }
+
+    protected static function setExpires(int $expires_in = 0)
+    {
+        return time() + $expires_in;
     }
 }

@@ -63,7 +63,7 @@ class Client
      */
     public function __construct(array $config = [], Builder $httpClientBuilder = null)
     {
-        $this->config = new Configuration($config);
+        $this->setConfig($config);
         $this->httpClientBuilder = $builder = $httpClientBuilder ?? new Builder();
         $this->responseHistory = new History();
 
@@ -73,6 +73,8 @@ class Client
             'User-Agent' => self::USER_AGENT,
         ]));
         $builder->addPlugin(new RedirectPlugin());
+
+        $this->authenticate();
     }
 
     /**
@@ -102,18 +104,11 @@ class Client
     /**
      * Authenticate a user for all next requests.
      *
-     * @param string      $token
-     *
      * @return $this
      */
-    public function authenticate(string $token = null)
+    public function authenticate()
     {
-        if ($token) {
-            $this->accessToken = new AccessToken($token);
-        } elseif ($this->getAccessToken() instanceof AccessToken) {
-        } else {
-            $this->accessToken = $this->oauth()->getToken();
-        }
+        $this->accessToken = $this->oauth()->getToken();
 
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
         $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()->getValue()));
@@ -150,6 +145,20 @@ class Client
 
         $this->getHttpClientBuilder()->removePlugin(AddHostPlugin::class);
         $this->getHttpClientBuilder()->addPlugin(new AddHostPlugin($uri));
+
+        return $this;
+    }
+
+    /**
+     * Sets the config array; useful if changing config after client is already newed up
+     *
+     * @param array $config
+     *
+     * @return $this
+     */
+    public function setConfig(array $config = [])
+    {
+        $this->config = new Configuration($config);
 
         return $this;
     }

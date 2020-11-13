@@ -37,7 +37,7 @@ class AccessToken
      *
      * @param array $token
      */
-    public function __construct($value, $type = '', $expiresIn = 0, $refreshToken = null)
+    public function __construct($value, $type = '', $expires = 0, $refreshToken = null)
     {
         if ($value) {
             $this->value = $value;
@@ -45,8 +45,8 @@ class AccessToken
         if ($type) {
             $this->type = $type;
         }
-        if ($expiresIn) {
-            $this->expires = time() + $expiresIn;
+        if ($expires) {
+            $this->expires = $expires;
         }
 
         if ($refreshToken) {
