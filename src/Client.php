@@ -74,6 +74,7 @@ class Client
         ]));
         $builder->addPlugin(new RedirectPlugin());
 
+        $this->setUrl($this->config->getBaseUrl());
         $this->authenticate();
     }
 
