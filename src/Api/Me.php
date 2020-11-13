@@ -6,8 +6,8 @@ namespace MoabTech\Procore\Api;
 
 class Me extends AbstractApi
 {
-    public function show()
+    public function show(array $params = [], array $headers = [])
     {
-        return $this->get('me', []);
+        return $this->get('me', $params, $headers);
     }
 }

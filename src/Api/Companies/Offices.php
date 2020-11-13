@@ -10,36 +10,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Offices extends AbstractCompaniesApi
 {
-    public function list(array $params = [])
+    public function list(array $params = [], array $headers = [])
     {
         $resolver = $this->createOptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
 
-        return $this->get('offices', $resolver->resolve($params));
+        return $this->get('offices', $resolver->resolve($params), $headers);
     }
 
-    public function create(array $params = [])
+    public function create(array $params = [], array $headers = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
         $resolver = $this->defineOfficeParams($resolver);
         if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->post('offices', $resolver->resolve($params), [], ['logo' => $logo]);
+            return $this->post('offices', $resolver->resolve($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->post('offices', $resolver->resolve($params));
+        return $this->post('offices', $resolver->resolve($params), $headers, []);
     }
 
-    public function show(string $uri, array $params = [])
+    public function show(string $uri, array $params = [], array $headers = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
         $uri = $this->buildUri($uri);
 
-        return $this->get($uri, $resolver->resolve($params));
+        return $this->get($uri, $resolver->resolve($params), $headers);
     }
 
-    public function update(string $uri, array $params = [])
+    public function update(string $uri, array $params = [], array $headers = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
@@ -47,19 +47,19 @@ class Offices extends AbstractCompaniesApi
         $uri = $this->buildUri($uri);
 
         if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->put($uri, $resolver->resolve($params), [], ['logo' => $logo]);
+            return $this->put($uri, $resolver->resolve($params), $headers, ['logo' => $logo]);
         }
 
-        return $this->put($uri, $resolver->resolve($params));
+        return $this->put($uri, $resolver->resolve($params), $headers, []);
     }
 
-    public function delete(string $uri, array $params = [])
+    public function delete(string $uri, array $params = [], array $headers = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
         $uri = $this->buildUri($uri);
 
-        return $this->delete($uri, $resolver->resolve($params));
+        return $this->delete($uri, $resolver->resolve($params), $headers);
     }
 
     /**

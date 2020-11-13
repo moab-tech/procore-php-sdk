@@ -40,11 +40,11 @@ class Companies extends AbstractApi
         $this->companyId = $companyId;
     }
 
-    public function list(array $params = [])
+    public function list(array $params = [], array $headers = [])
     {
         $resolver = $this->createOptionsResolver();
 
-        return $this->get('companies', $resolver->resolve($params));
+        return $this->get('companies', $resolver->resolve($params), $headers);
     }
 
     public function offices()

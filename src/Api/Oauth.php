@@ -35,7 +35,7 @@ class Oauth extends AbstractApi
         $this->setPrefix('/');
     }
 
-    public function getToken()
+    public function getToken(array $headers = [])
     {
         $accessToken = null;
         if (! empty($this->config->getAccessToken())) {
@@ -55,11 +55,11 @@ class Oauth extends AbstractApi
         } else {
             switch ($this->config->getGrantType()) {
                 case 'authorization_code':
-                    $accessToken = $this->getTokenByCode($this->config->code);
+                    $accessToken = $this->getTokenByCode($this->config->code, $headers);
 
                     break;
                 case 'client_credentials':
-                    $accessToken = $this->getTokenByClientCredentials();
+                    $accessToken = $this->getTokenByClientCredentials($headers);
 
                     break;
             }
@@ -73,7 +73,7 @@ class Oauth extends AbstractApi
      *
      * @return AccessToken
      */
-    public function getTokenByCode()
+    public function getTokenByCode(array $headers = [])
     {
         if (empty($this->config->code)) {
             throw new MissingArgumentException('Missing code parameter.');
@@ -85,7 +85,7 @@ class Oauth extends AbstractApi
             'code' => $this->config->getCode(),
         ];
 
-        $resBody = $this->post('oauth/token', $params);
+        $resBody = $this->post('oauth/token', $params, $headers, []);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
     }
@@ -95,7 +95,7 @@ class Oauth extends AbstractApi
      *
      * @return AccessToken
      */
-    public function getTokenByClientCredentials()
+    public function getTokenByClientCredentials(array $headers = [])
     {
         $params = [
             'grant_type' => 'client_credentials',
@@ -103,7 +103,7 @@ class Oauth extends AbstractApi
             'client_secret' => $this->config->getClientSecret(),
         ];
 
-        $resBody = $this->post('oauth/token', $params);
+        $resBody = $this->post('oauth/token', $params, $headers, []);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in']);
     }
@@ -115,7 +115,7 @@ class Oauth extends AbstractApi
      *
      * @return AccessToken
      */
-    public function refreshToken()
+    public function refreshToken(array $headers = [])
     {
         if (empty($this->config->refreshToken)) {
             throw new MissingArgumentException('Missing refresh_token parameter.');
@@ -127,7 +127,7 @@ class Oauth extends AbstractApi
             'refresh_token' => $this->config->getRefreshToken(),
         ];
 
-        $resBody = $this->post('oauth/token', $params);
+        $resBody = $this->post('oauth/token', $params, $headers, []);
 
         return new AccessToken($resBody['access_token'], $resBody['token_type'], $resBody['expires_in'], $resBody['refresh_token']);
     }

@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Uploads extends AbstractCompaniesApi
 {
-    public function create(array $params = [])
+    public function create(array $params = [], array $headers = [])
     {
         $uri = $this->buildUri();
         $resolver = new OptionsResolver();
@@ -17,7 +17,7 @@ class Uploads extends AbstractCompaniesApi
         $resolver->setDefined('response_filename')->setAllowedTypes('response_filename', 'string');
         $resolver->setDefined('response_content_type')->setAllowedTypes('response_content_type', 'string');
 
-        return $this->post($uri, $resolver->resolve($params));
+        return $this->post($uri, $resolver->resolve($params), $headers);
     }
 
     /**
@@ -29,6 +29,6 @@ class Uploads extends AbstractCompaniesApi
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', $this->companyId, 'uploads', ...$parts);
+        return UriBuilder::build('companies', (string) $this->companyId, 'uploads', ...$parts);
     }
 }

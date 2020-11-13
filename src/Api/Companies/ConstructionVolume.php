@@ -16,7 +16,7 @@ class ConstructionVolume extends AbstractCompaniesApi
         $resolver = $this->defineCompanyId($resolver);
         $resolver->setDefined('message')->setAllowedTypes('message', 'string');
 
-        return $this->post($uri, $resolver->resolve($params));
+        return $this->post($uri, $resolver->resolve($params), [], []);
     }
 
     /**
@@ -28,6 +28,6 @@ class ConstructionVolume extends AbstractCompaniesApi
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', $this->companyId, 'construction_volume', ...$parts);
+        return UriBuilder::build('companies', (string) $this->companyId, 'construction_volume', ...$parts);
     }
 }
