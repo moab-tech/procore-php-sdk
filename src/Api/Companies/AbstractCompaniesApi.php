@@ -12,7 +12,7 @@ abstract class AbstractCompaniesApi extends AbstractApi
     /**
      * The companyId.
      *
-     * @var string
+     * @var int
      */
     protected $companyId;
 
@@ -20,12 +20,12 @@ abstract class AbstractCompaniesApi extends AbstractApi
      * Create a new API instance.
      *
      * @param Client   $client
-     * @param string   $companyId
+     * @param int   $companyId
      * @param int|null $perPage
      *
      * @return void
      */
-    public function __construct(Client $client, string $companyId = null, int $perPage = null, int $page = null)
+    public function __construct(Client $client, ?int $companyId = null, int $perPage = null, int $page = null)
     {
         parent::__construct($client, $perPage, $page);
         $this->companyId = $companyId;
@@ -36,7 +36,7 @@ abstract class AbstractCompaniesApi extends AbstractApi
     {
         $resolver->setDefined('company_id')
             ->setDefault('company_id', $this->companyId)
-            ->setAllowedTypes('company_id', 'string');
+            ->setAllowedTypes('company_id', 'int');
 
         return $resolver;
     }
