@@ -299,7 +299,7 @@ abstract class AbstractApi
     protected function defineCompanyId($resolver)
     {
         $resolver->setDefined('company_id')
-            ->setDefault('company_id', $this->companyId)
+            ->setDefault('company_id', $this->getClient()->getCompanyId())
             ->setAllowedTypes('company_id', 'int');
 
         return $resolver;
