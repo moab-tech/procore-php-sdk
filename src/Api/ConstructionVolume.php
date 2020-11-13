@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace MoabTech\Procore\Api\Companies;
+namespace MoabTech\Procore\Api;
 
-use MoabTech\Procore\Api\AbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
 class ConstructionVolume extends AbstractApi
