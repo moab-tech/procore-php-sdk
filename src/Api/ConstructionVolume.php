@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace MoabTech\Procore\Api\Companies;
 
+use MoabTech\Procore\Api\AbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class ConstructionVolume extends AbstractCompaniesApi
+class ConstructionVolume extends AbstractApi
 {
     public function sendUrgentError(array $params = [])
     {
@@ -24,6 +25,6 @@ class ConstructionVolume extends AbstractCompaniesApi
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', (string) $this->companyId, 'construction_volume', ...$parts);
+        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'construction_volume', ...$parts);
     }
 }

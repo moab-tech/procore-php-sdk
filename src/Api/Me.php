@@ -8,6 +8,13 @@ class Me extends AbstractApi
 {
     public function show(array $params = [], array $headers = [])
     {
-        return $this->get('me', $params, $headers);
+        if (! $this->getClient()->getCompanyId()) {
+            return $this->get('me');
+        }
+
+        $resolver = $this->createOptionsResolver();
+        $resolver = $this->defineCompanyId($resolver);
+
+        return $this->get('me', $resolver->resolve($params), $headers);
     }
 }

@@ -7,6 +7,9 @@ use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use MoabTech\Procore\Api\Companies;
+use MoabTech\Procore\Api\Companies\ConstructionVolume;
+use MoabTech\Procore\Api\Companies\Offices;
+use MoabTech\Procore\Api\Companies\Uploads;
 use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\Api\Oauth;
 use MoabTech\Procore\Config\Configuration;
@@ -55,6 +58,13 @@ class Client
     private $accessToken;
 
     /**
+     * The current company
+     *
+     * @var int
+     */
+    private $companyId;
+
+    /**
      * Client constructor.
      *
      * @param Builder
@@ -88,9 +98,45 @@ class Client
     /**
      * @return Companies
      */
-    public function companies(?int $companyId = null)
+    public function companies()
     {
-        return new Companies($this, $companyId);
+        return new Companies($this);
+    }
+
+    /**
+     * @return Offices
+     */
+    public function offices()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new Offices($this);
+    }
+
+    /**
+     * @return Uploads
+     */
+    public function uploads()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new Uploads($this);
+    }
+
+    /**
+     * @return ConstructionVolume
+     */
+    public function constructionVolume()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new ConstructionVolume($this);
     }
 
     /**
@@ -126,6 +172,7 @@ class Client
 
         if ($companyId) {
             $this->getHttpClientBuilder()->addPlugin(new ProcoreHeaders($companyId));
+            $this->companyId = $companyId;
         }
 
         return $this;
@@ -191,6 +238,11 @@ class Client
     public function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    public function getCompanyId()
+    {
+        return $this->companyId;
     }
 
     /**

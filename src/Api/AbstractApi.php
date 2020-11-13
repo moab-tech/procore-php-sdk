@@ -15,7 +15,7 @@ use Psr\Http\Message\StreamInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use ValueError;
 
-abstract class AbstractApi implements ApiInterface
+abstract class AbstractApi
 {
     /**
      * The client instance.
@@ -292,6 +292,15 @@ abstract class AbstractApi implements ApiInterface
                 return $value > 0 && $value <= 100;
             })
         ;
+
+        return $resolver;
+    }
+
+    protected function defineCompanyId($resolver)
+    {
+        $resolver->setDefined('company_id')
+            ->setDefault('company_id', $this->companyId)
+            ->setAllowedTypes('company_id', 'int');
 
         return $resolver;
     }

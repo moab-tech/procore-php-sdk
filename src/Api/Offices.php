@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace MoabTech\Procore\Api\Companies;
 
+use MoabTech\Procore\Api\AbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Offices extends AbstractCompaniesApi
+class Offices extends AbstractApi
 {
     public function list(array $params = [], array $headers = [])
     {
@@ -69,6 +70,6 @@ class Offices extends AbstractCompaniesApi
 
     protected function buildParams($params)
     {
-        return ['office' => $params, 'company_id' => $this->companyId];
+        return ['office' => $params, 'company_id' => $this->getClient()->getCompanyId()];
     }
 }
