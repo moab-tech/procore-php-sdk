@@ -87,9 +87,9 @@ class Client
     /**
      * @return Companies
      */
-    public function companies(?int $companyId = null)
+    public function companies($companyId = null)
     {
-        return new Companies($this, $companyId);
+        return new Companies($this, (string) $companyId);
     }
 
     /**

@@ -9,11 +9,10 @@ use MoabTech\Procore\Client;
 
 abstract class AbstractCompaniesApi extends AbstractApi
 {
-    public $client;
     /**
      * The companyId.
      *
-     * @var int
+     * @var string
      */
     protected $companyId;
 
@@ -26,19 +25,18 @@ abstract class AbstractCompaniesApi extends AbstractApi
      *
      * @return void
      */
-    public function __construct(Client $client, int $companyId, int $perPage = null, int $page = null)
+    public function __construct(Client $client, string $companyId = null, int $perPage = null, int $page = null)
     {
         parent::__construct($client, $perPage, $page);
         $this->companyId = $companyId;
-        $this->client = $client;
-        $this->client->forCompany($companyId);
+        $client->forCompany($companyId);
     }
 
     protected function defineCompanyId($resolver)
     {
         $resolver->setDefined('company_id')
             ->setDefault('company_id', $this->companyId)
-            ->setAllowedTypes('company_id', 'int');
+            ->setAllowedTypes('company_id', 'string');
 
         return $resolver;
     }
