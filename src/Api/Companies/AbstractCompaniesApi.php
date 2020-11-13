@@ -9,6 +9,7 @@ use MoabTech\Procore\Client;
 
 abstract class AbstractCompaniesApi extends AbstractApi
 {
+    protected $client;
     /**
      * The companyId.
      *
@@ -29,7 +30,8 @@ abstract class AbstractCompaniesApi extends AbstractApi
     {
         parent::__construct($client, $perPage, $page);
         $this->companyId = $companyId;
-        $client->forCompany($companyId);
+        $this->client = $client;
+        $this->client->forCompany($companyId);
     }
 
     protected function defineCompanyId($resolver)
