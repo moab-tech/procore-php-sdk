@@ -41,6 +41,13 @@ class Client
     private $responseHistory;
 
     /**
+     * The current configuration
+     *
+     * @var Configuration
+     */
+    private $config;
+
+    /**
      * The current access token
      *
      * @var AccessToken
@@ -73,7 +80,7 @@ class Client
     */
     public function oauth()
     {
-        return new Oauth($this, $this->config);
+        return new Oauth($this);
     }
 
     /**
@@ -112,11 +119,6 @@ class Client
         $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()->getValue()));
 
         return $this;
-    }
-
-    public function getAccessToken()
-    {
-        return $this->accessToken;
     }
 
     /**
@@ -173,6 +175,26 @@ class Client
         $this->accessToken = $this->oauth->refreshToken($rToken);
 
         return $this->accessToken;
+    }
+
+    /**
+     * Get the access token.
+     *
+     * @return AccessToken|null
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Get the current configuration
+     *
+     * @return Configuration|null
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**

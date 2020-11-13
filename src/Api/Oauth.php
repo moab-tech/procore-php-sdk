@@ -11,14 +11,7 @@ class Oauth extends AbstractApi
     /**
      * The config.
      */
-    protected $config;
-
-    /**
-     * The default auth URL.
-     *
-     * @var string
-     */
-    private const AUTH_URL = 'https://login.procore.com';
+    private $config;
 
     /**
      * Authorization constructor.
@@ -30,8 +23,8 @@ class Oauth extends AbstractApi
     public function __construct(Client $client)
     {
         parent::__construct($client);
-        $this->config = $client->config;
-        $this->getClient()->setUrl(static::AUTH_URL);
+        $this->config = $client->getConfig();
+        $client->setUrl($this->config->getAuthUrl());
         $this->setPrefix('/');
     }
 

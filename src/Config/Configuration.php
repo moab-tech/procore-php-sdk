@@ -57,6 +57,20 @@ class Configuration implements ConfigurationInterface
     protected $refreshToken;
 
     /**
+     * The base url
+     *
+     * @var null|string
+     */
+    protected $baseUrl;
+
+    /**
+     * The auth url
+     *
+     * @var null|string
+     */
+    protected $authUrl;
+
+    /**
      * Create a new configuration.
      *
      * @param array $config
@@ -72,6 +86,8 @@ class Configuration implements ConfigurationInterface
             'code' => null,
             'access_token' => null,
             'refresh_token' => null,
+            'base_url' => 'https://api.procore.com',
+            'auth_url' => 'https://login.procore.com',
         ], $config);
 
         $this->setClientId($config['client_id']);
@@ -80,6 +96,8 @@ class Configuration implements ConfigurationInterface
         $this->code = $config['code'];
         $this->accessToken = $config['access_token'];
         $this->refreshToken = $config['refresh_token'];
+        $this->baseUrl = $config['base_url'];
+        $this->authUrl = $config['auth_url'];
     }
 
     /**
@@ -140,6 +158,26 @@ class Configuration implements ConfigurationInterface
     public function getRefreshToken()
     {
         return $this->refreshToken;
+    }
+
+    /**
+     * Returns the base url
+     *
+     * @return null|string
+     */
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * Returns the auth url
+     *
+     * @return null|string
+     */
+    public function getAuthUrl()
+    {
+        return $this->authUrl;
     }
 
     /**

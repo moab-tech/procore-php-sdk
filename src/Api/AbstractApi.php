@@ -18,13 +18,6 @@ use ValueError;
 abstract class AbstractApi implements ApiInterface
 {
     /**
-     * The default base URL.
-     *
-     * @var string
-     */
-    private const BASE_URL = 'https://api.procore.com';
-
-    /**
      * The client instance.
      *
      * @var Client
@@ -74,7 +67,7 @@ abstract class AbstractApi implements ApiInterface
         $this->perPage = $perPage;
         $this->page = $page;
 
-        $this->getClient()->setUrl(self::BASE_URL);
+        $this->client->setUrl($this->client->getConfig()->getBaseUrl());
     }
 
     /**
