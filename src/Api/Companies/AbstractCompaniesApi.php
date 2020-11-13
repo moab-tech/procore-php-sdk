@@ -9,7 +9,7 @@ use MoabTech\Procore\Client;
 
 abstract class AbstractCompaniesApi extends AbstractApi
 {
-    protected $client;
+    public $client;
     /**
      * The companyId.
      *
