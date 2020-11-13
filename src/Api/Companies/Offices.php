@@ -30,21 +30,21 @@ class Offices extends AbstractCompaniesApi
         return $this->post('offices', $resolver->resolve($params));
     }
 
-    public function show(string $id, array $params = [])
+    public function show(string $uri, array $params = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
-        $uri = $this->buildUri($id);
+        $uri = $this->buildUri($uri);
 
         return $this->get($uri, $resolver->resolve($params));
     }
 
-    public function update(string $id, array $params = [])
+    public function update(string $uri, array $params = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
         $resolver = $this->defineOfficeParams($resolver);
-        $uri = $this->buildUri($id);
+        $uri = $this->buildUri($uri);
 
         if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
             return $this->put($uri, $resolver->resolve($params), [], ['logo' => $logo]);
@@ -53,11 +53,11 @@ class Offices extends AbstractCompaniesApi
         return $this->put($uri, $resolver->resolve($params));
     }
 
-    public function delete(string $id, array $params = [])
+    public function delete(string $uri, array $params = [])
     {
         $resolver = new OptionsResolver();
         $resolver = $this->defineCompanyId($resolver);
-        $uri = $this->buildUri($id);
+        $uri = $this->buildUri($uri);
 
         return $this->delete($uri, $resolver->resolve($params));
     }

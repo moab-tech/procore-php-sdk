@@ -21,7 +21,7 @@ class Companies extends AbstractApi
     /**
      * The company.
      *
-     * @var string|null
+     * @var int|null
      */
     protected $companyId;
 
@@ -29,12 +29,12 @@ class Companies extends AbstractApi
      * Create a new API instance.
      *
      * @param Client   $client
-     * @param string|null   $companyId
+     * @param int|null   $companyId
      * @param int|null $perPage
      *
      * @return void
      */
-    public function __construct(Client $client, ?string $companyId = null, int $perPage = null, int $page = null)
+    public function __construct(Client $client, ?int $companyId = null, int $perPage = null, int $page = null)
     {
         parent::__construct($client, $perPage, $page);
         $this->companyId = $companyId;
