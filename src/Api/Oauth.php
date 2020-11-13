@@ -75,6 +75,7 @@ class Oauth extends AbstractApi
             'client_id' => $this->config->getClientId(),
             'client_secret' => $this->config->getClientSecret(),
             'code' => $this->config->getCode(),
+            'redirect_uri' => $this->config->getRedirect(),
         ];
 
         $resBody = $this->post('oauth/token', $params, $headers, []);

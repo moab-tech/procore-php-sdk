@@ -78,6 +78,13 @@ class Configuration implements ConfigurationInterface
     protected $authUrl;
 
     /**
+     * The redirect url
+     *
+     * @var null|string
+     */
+    protected $redirect;
+
+    /**
      * Create a new configuration.
      *
      * @param array $config
@@ -94,6 +101,7 @@ class Configuration implements ConfigurationInterface
             'access_token' => null,
             'refresh_token' => null,
             'expires' => 0,
+            'redirect' => null,
             'base_url' => 'https://api.procore.com',
             'auth_url' => 'https://login.procore.com',
         ], $config);
@@ -107,6 +115,7 @@ class Configuration implements ConfigurationInterface
         $this->expires = $config['expires'];
         $this->baseUrl = $config['base_url'];
         $this->authUrl = $config['auth_url'];
+        $this->redirect = $config['redirect'];
     }
 
     /**
@@ -197,6 +206,16 @@ class Configuration implements ConfigurationInterface
     public function getAuthUrl()
     {
         return $this->authUrl;
+    }
+
+    /**
+     * Returns the redirect uri
+     *
+     * @return null|string
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
     }
 
     /**

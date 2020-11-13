@@ -50,4 +50,32 @@ interface ConfigurationInterface
      * @return string
      */
     public function getRefreshToken();
+
+    /**
+     * get the token expiration
+     *
+     * @return int
+     */
+    public function getExpires();
+
+    /**
+     * returns the base url
+     *
+     * @return string
+     */
+    public function getBaseUrl();
+
+    /**
+     * returns the auth url
+     *
+     * @return string
+     */
+    public function getAuthUrl();
+
+    /**
+     * Returns the redirect uri
+     *
+     * @return string
+     */
+    public function getRedirect();
 }
