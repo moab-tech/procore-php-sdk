@@ -37,7 +37,7 @@ class AccessToken
      *
      * @param array $token
      */
-    public function __construct($value, $type = '', $expiresIn = -1, $refreshToken = null)
+    public function __construct($value, $type = '', $expiresIn = 0, $refreshToken = null)
     {
         if ($value) {
             $this->value = $value;
@@ -52,6 +52,16 @@ class AccessToken
         if ($refreshToken) {
             $this->refreshToken = $refreshToken;
         }
+    }
+
+    /**
+     * Returns true if expires is greater than current time
+     *
+     * @return bool
+     */
+    public function hasExpired()
+    {
+        return $this->getExpires() <= time();
     }
 
     /**

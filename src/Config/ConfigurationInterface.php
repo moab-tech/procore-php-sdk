@@ -50,4 +50,11 @@ interface ConfigurationInterface
      * @return string
      */
     public function getRefreshToken();
+
+    /**
+     * Returns true if token has expired.
+     *
+     * @return bool
+     */
+    public function hasExpired();
 }
