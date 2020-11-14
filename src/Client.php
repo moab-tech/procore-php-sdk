@@ -11,6 +11,7 @@ use MoabTech\Procore\Api\ConstructionVolume;
 use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\Api\Oauth;
 use MoabTech\Procore\Api\Offices;
+use MoabTech\Procore\Api\Programs;
 use MoabTech\Procore\Api\Uploads;
 use MoabTech\Procore\Config\Configuration;
 use MoabTech\Procore\Exception\ConfigurationException;
@@ -113,6 +114,18 @@ class Client
         }
 
         return new Offices($this);
+    }
+
+    /**
+     * @return Programs
+     */
+    public function programs()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new Programs($this);
     }
 
     /**
