@@ -6,7 +6,7 @@ namespace MoabTech\Procore\Api;
 
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class Programs extends AbstractApi
+class ProjectOwnerTypes extends AbstractApi
 {
     public function list(array $params = [], array $headers = [])
     {
@@ -53,11 +53,11 @@ class Programs extends AbstractApi
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'programs', ...$parts);
+        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'project_owner_types', ...$parts);
     }
 
     protected function buildParams($params)
     {
-        return ['program' => $params];
+        return ['project_owner_type' => $params];
     }
 }

@@ -12,6 +12,8 @@ use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\Api\Oauth;
 use MoabTech\Procore\Api\Offices;
 use MoabTech\Procore\Api\Programs;
+use MoabTech\Procore\Api\ProjectBidTypes;
+use MoabTech\Procore\Api\ProjectOwnerTypes;
 use MoabTech\Procore\Api\Uploads;
 use MoabTech\Procore\Config\Configuration;
 use MoabTech\Procore\Exception\ConfigurationException;
@@ -126,6 +128,30 @@ class Client
         }
 
         return new Programs($this);
+    }
+
+    /**
+     * @return ProjectBidTypes
+     */
+    public function projectBidTypes()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new ProjectBidTypes($this);
+    }
+
+    /**
+     * @return ProjectOwnerTypes
+     */
+    public function projectOwnerTypes()
+    {
+        if (! $this->getCompanyId()) {
+            throw new ConfigurationException('Please set a company for this endpoint.');
+        }
+
+        return new ProjectOwnerTypes($this);
     }
 
     /**
