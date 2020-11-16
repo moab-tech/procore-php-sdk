@@ -13,7 +13,46 @@ composer require moab-tech/procore-php-sdk
 ## Usage
 
 ``` php
-$procore = new MoabTech\Procore\Client();
+// with an existing access token
+$procore = new MoabTech\Procore\Client([
+            'client_id' => 'YOUR-CLIENT-ID',
+            'client_secret' => 'YOUR-CLIENT-SECRET',
+            'access_token' => 'YOUR-ACCESS-TOKEN',
+            'expires_in' => 'OPTIONAL: Should be in seconds'
+        ]);
+$procoreUser = $procore->me()->show();
+```
+
+``` php
+// with a refresh token
+$procore = new MoabTech\Procore\Client([
+            'client_id' => 'YOUR-CLIENT-ID',
+            'client_secret' => 'YOUR-CLIENT-SECRET',
+            'refresh_token' => 'YOUR-ACCESS-TOKEN'
+        ]);
+$procoreUser = $procore->me()->show();
+```
+
+``` php
+// using Client Credentials
+$procore = new MoabTech\Procore\Client([
+            'grant_type => 'client_credentials',
+            'client_id' => 'YOUR-CLIENT-ID',
+            'client_secret' => 'YOUR-CLIENT-SECRET'
+        ]);
+$procoreUser = $procore->me()->show();
+```
+
+``` php
+// using Authorization Code
+$procore = new MoabTech\Procore\Client([
+            'grant_type => 'authorization_code',
+            'client_id' => 'YOUR-CLIENT-ID',
+            'client_secret' => 'YOUR-CLIENT-SECRET',
+            'code' => 'CODE-YOU-RECEIVED-DURING-AUTHORIZATION',
+            'redirect_uri' => 'ie https://example.test/procore/callback'
+        ]);
+$procoreUser = $procore->me()->show();
 ```
 
 ## Testing
