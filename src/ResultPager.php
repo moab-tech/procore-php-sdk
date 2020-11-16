@@ -22,6 +22,13 @@ final class ResultPager implements ResultPagerInterface
     private const PER_PAGE = 50;
 
     /**
+     * The default page we start on
+     *
+     * @var int
+     */
+    private const PAGE = 1;
+
+    /**
      * The client to use for pagination.
      *
      * @var Client
@@ -34,6 +41,13 @@ final class ResultPager implements ResultPagerInterface
      * @var int
      */
     private $perPage;
+
+    /**
+     * The page we are wanting
+     *
+     * @var int
+     */
+    private $page;
 
     /**
      * The pagination result from the API.
@@ -50,14 +64,19 @@ final class ResultPager implements ResultPagerInterface
      *
      * @return void
      */
-    public function __construct(Client $client, int $perPage = null)
+    public function __construct(Client $client, int $perPage = null, int $page = null)
     {
         if (null !== $perPage && ($perPage < 1 || $perPage > 100)) {
             throw new ValueError(\sprintf('%s::__construct(): Argument #2 ($perPage) must be between 1 and 100, or null', self::class));
         }
 
+        if (null !== $page && ($page < 1 || $page > 100)) {
+            throw new ValueError(\sprintf('%s::__construct(): Argument #3 ($page) must be between 1 and 100, or null', self::class));
+        }
+
         $this->client = $client;
         $this->perPage = $perPage ?? self::PER_PAGE;
+        $this->perPage = $page ?? self::PAGE;
         $this->pagination = [];
     }
 
@@ -74,7 +93,7 @@ final class ResultPager implements ResultPagerInterface
      */
     public function fetch(ApiInterface $api, string $method, array $parameters = [])
     {
-        $result = $api->perPage($this->perPage)->$method(...$parameters);
+        $result = $api->perPage($this->perPage)->page($this->page)->$method(...$parameters);
 
         if (! \is_array($result)) {
             throw new RuntimeException('Pagination of this endpoint is not supported.');
