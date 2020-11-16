@@ -13,7 +13,7 @@ composer require moab-tech/procore-php-sdk
 ## Usage
 
 ``` php
-$procore = new MoabTech\Procore();
+$procore = new MoabTech\Procore\Client();
 ```
 
 ## Testing
