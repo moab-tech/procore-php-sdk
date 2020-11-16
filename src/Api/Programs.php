@@ -6,7 +6,7 @@ namespace MoabTech\Procore\Api;
 
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class Programs extends AbstractApi
+class Programs extends CompaniesAbstractApi implements ApiInterface
 {
     public function list(array $params = [], array $headers = [])
     {

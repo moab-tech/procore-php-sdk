@@ -6,7 +6,7 @@ namespace MoabTech\Procore\Api;
 
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class Uploads extends AbstractApi
+class Uploads extends CompaniesAbstractApi
 {
     public function create(array $params = [], array $headers = [])
     {

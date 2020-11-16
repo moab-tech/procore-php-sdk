@@ -6,7 +6,7 @@ namespace MoabTech\Procore\Api;
 
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class ConstructionVolume extends AbstractApi
+class ConstructionVolume extends CompaniesAbstractApi
 {
     public function sendUrgentError(array $params = [])
     {

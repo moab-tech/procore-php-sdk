@@ -38,12 +38,7 @@ class Oauth extends AbstractApi
                 $this->config->getRefreshToken()
             );
         } elseif (! empty($this->config->getRefreshToken())) {
-            $accessToken = new AccessToken(
-                '',
-                '',
-                $this->config->getExpires(),
-                $this->config->getRefreshToken()
-            );
+            $accessToken = $this->refreshToken();
         } else {
             switch ($this->config->getGrantType()) {
                 case 'authorization_code':

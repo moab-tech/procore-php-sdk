@@ -14,6 +14,11 @@ use MoabTech\Procore\Api\Offices;
 use MoabTech\Procore\Api\Programs;
 use MoabTech\Procore\Api\ProjectBidTypes;
 use MoabTech\Procore\Api\ProjectOwnerTypes;
+use MoabTech\Procore\Api\ProjectRegions;
+use MoabTech\Procore\Api\ProjectStages;
+use MoabTech\Procore\Api\ProjectTypes;
+use MoabTech\Procore\Api\Roles;
+use MoabTech\Procore\Api\SubmittalStatuses;
 use MoabTech\Procore\Api\Uploads;
 use MoabTech\Procore\Config\Configuration;
 use MoabTech\Procore\Exception\ConfigurationException;
@@ -111,10 +116,6 @@ class Client
      */
     public function offices()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new Offices($this);
     }
 
@@ -123,10 +124,6 @@ class Client
      */
     public function programs()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new Programs($this);
     }
 
@@ -135,10 +132,6 @@ class Client
      */
     public function projectBidTypes()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new ProjectBidTypes($this);
     }
 
@@ -147,11 +140,47 @@ class Client
      */
     public function projectOwnerTypes()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new ProjectOwnerTypes($this);
+    }
+
+    /**
+     * @return ProjectRegions
+     */
+    public function projectRegions()
+    {
+        return new ProjectRegions($this);
+    }
+
+    /**
+     * @return ProjectStages
+     */
+    public function projectStages()
+    {
+        return new ProjectStages($this);
+    }
+
+    /**
+     * @return ProjectTypes
+     */
+    public function projectTypes()
+    {
+        return new ProjectTypes($this);
+    }
+
+    /**
+     * @return Roles
+     */
+    public function roles()
+    {
+        return new Roles($this);
+    }
+
+    /**
+     * @return SubmittalStatuses
+     */
+    public function SubmittalStatuses()
+    {
+        return new SubmittalStatuses($this);
     }
 
     /**
@@ -159,10 +188,6 @@ class Client
      */
     public function uploads()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new Uploads($this);
     }
 
@@ -171,10 +196,6 @@ class Client
      */
     public function constructionVolume()
     {
-        if (! $this->getCompanyId()) {
-            throw new ConfigurationException('Please set a company for this endpoint.');
-        }
-
         return new ConstructionVolume($this);
     }
 
