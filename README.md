@@ -11,9 +11,11 @@ composer require moab-tech/procore-php-sdk
 ```
 
 ## Usage
+You can authenticate 4 different ways using a configuration array passed to the client.
+
+The first is with an existing valid access token.
 
 ``` php
-// with an existing access token
 $procore = new MoabTech\Procore\Client([
             'client_id' => 'YOUR-CLIENT-ID',
             'client_secret' => 'YOUR-CLIENT-SECRET',
@@ -23,8 +25,9 @@ $procore = new MoabTech\Procore\Client([
 $procoreUser = $procore->me()->show();
 ```
 
+If you don't have a valid token but you have a refresh token that hasn't been used yet, you can authenticate with that.  Please don't include an access_token value when using this method or it will try to use that for authentication instead.
+
 ``` php
-// with a refresh token
 $procore = new MoabTech\Procore\Client([
             'client_id' => 'YOUR-CLIENT-ID',
             'client_secret' => 'YOUR-CLIENT-SECRET',
@@ -33,8 +36,9 @@ $procore = new MoabTech\Procore\Client([
 $procoreUser = $procore->me()->show();
 ```
 
+If your application uses a Client Credentials grant type, then you can simply define the type and pass in your id and secret.  This method of authentication is best for service type requests as opposed to user requests.
+
 ``` php
-// using Client Credentials
 $procore = new MoabTech\Procore\Client([
             'grant_type => 'client_credentials',
             'client_id' => 'YOUR-CLIENT-ID',
@@ -43,8 +47,9 @@ $procore = new MoabTech\Procore\Client([
 $procoreUser = $procore->me()->show();
 ```
 
+Please refer to the Procore documentation for receiving a code to use via the Authorization Code grant type.  This method of authentication is used when you would like the user to authenticate to your app using their Procore username and password.  Any requests made will then be tied to this user.  Please keep in mind that the user will only be able to access endpoints that he/she has permissions for.
+
 ``` php
-// using Authorization Code
 $procore = new MoabTech\Procore\Client([
             'grant_type => 'authorization_code',
             'client_id' => 'YOUR-CLIENT-ID',
