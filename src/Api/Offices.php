@@ -19,8 +19,8 @@ class Offices extends CompaniesAbstractApi implements ApiInterface
 
     public function create(array $params = [], array $headers = [])
     {
-        if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->post('offices', $this->buildParams($params), $headers, ['logo' => $logo]);
+        if (array_key_exists('logo', $params)) {
+            return $this->post('offices', $this->buildParams($params), $headers, ['logo' => $params['logo']]);
         }
 
         return $this->post('offices', $this->buildParams($params), $headers);
@@ -39,8 +39,8 @@ class Offices extends CompaniesAbstractApi implements ApiInterface
     {
         $uri = $this->buildUri((string) $id);
 
-        if ($logo = $this->getArrayPath(['office', 'logo'], $params)) {
-            return $this->put($uri, $this->buildParams($params), $headers, ['logo' => $logo]);
+        if (array_key_exists('logo', $params)) {
+            return $this->put($uri, $this->buildParams($params), $headers, ['logo' => $params['logo']]);
         }
 
         return $this->put($uri, $this->buildParams($params), $headers);
