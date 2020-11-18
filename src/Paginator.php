@@ -9,10 +9,7 @@ use MoabTech\Procore\Exception\RuntimeException;
 use MoabTech\Procore\HttpClient\Message\ResponseMediator;
 use ValueError;
 
-/**
- * This is the result pager class.
- */
-final class ResultPager implements ResultPagerInterface
+final class Paginator implements PaginatorInterface
 {
     /**
      * The default number of entries to request per page.
@@ -76,7 +73,7 @@ final class ResultPager implements ResultPagerInterface
 
         $this->client = $client;
         $this->perPage = $perPage ?? self::PER_PAGE;
-        $this->perPage = $page ?? self::PAGE;
+        $this->page = $page ?? self::PAGE;
         $this->pagination = [];
     }
 

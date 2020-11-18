@@ -6,10 +6,7 @@ namespace MoabTech\Procore;
 
 use MoabTech\Procore\Api\ApiInterface;
 
-/**
- * This is the result pager interface.
- */
-interface ResultPagerInterface
+interface PaginatorInterface
 {
     /**
      * Fetch a single result from an api call.
