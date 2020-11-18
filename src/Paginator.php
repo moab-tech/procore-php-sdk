@@ -63,12 +63,8 @@ final class Paginator implements PaginatorInterface
      */
     public function __construct(Client $client, int $perPage = null, int $page = null)
     {
-        if (null !== $perPage && ($perPage < 1 || $perPage > 100)) {
-            throw new ValueError(\sprintf('%s::__construct(): Argument #2 ($perPage) must be between 1 and 100, or null', self::class));
-        }
-
-        if (null !== $page && ($page < 1 || $page > 100)) {
-            throw new ValueError(\sprintf('%s::__construct(): Argument #3 ($page) must be between 1 and 100, or null', self::class));
+        if (null !== $perPage && ($perPage < 1 || $perPage > 10000)) {
+            throw new ValueError(\sprintf('%s::__construct(): Argument #2 ($perPage) must be between 1 and 10000, or null', self::class));
         }
 
         $this->client = $client;
@@ -99,48 +95,6 @@ final class Paginator implements PaginatorInterface
         $this->postFetch();
 
         return $result;
-    }
-
-    /**
-     * Fetch all results from an api call.
-     *
-     * @param ApiInterface $api
-     * @param string       $method
-     * @param array        $parameters
-     *
-     * @throws \Http\Client\Exception
-     *
-     * @return array
-     */
-    public function fetchAll(ApiInterface $api, string $method, array $parameters = [])
-    {
-        return \iterator_to_array($this->fetchAllLazy($api, $method, $parameters));
-    }
-
-    /**
-     * Lazily fetch all results from an api call.
-     *
-     * @param ApiInterface $api
-     * @param string       $method
-     * @param array        $parameters
-     *
-     * @throws \Http\Client\Exception
-     *
-     * @return \Generator
-     */
-    public function fetchAllLazy(ApiInterface $api, string $method, array $parameters = [])
-    {
-        /** @var mixed $value */
-        foreach ($this->fetch($api, $method, $parameters) as $value) {
-            yield $value;
-        }
-
-        while ($this->hasNext()) {
-            /** @var mixed $value */
-            foreach ($this->fetchNext() as $value) {
-                yield $value;
-            }
-        }
     }
 
     /**

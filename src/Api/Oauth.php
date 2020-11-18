@@ -2,7 +2,6 @@
 
 namespace MoabTech\Procore\Api;
 
-use MoabTech\Procore\AccessToken;
 use MoabTech\Procore\Client;
 use MoabTech\Procore\Exception\MissingArgumentException;
 
@@ -31,12 +30,7 @@ class Oauth extends AbstractApi
     {
         $accessToken = null;
         if (! empty($this->config->getAccessToken())) {
-            $accessToken = new AccessToken(
-                $this->config->getAccessToken(),
-                '',
-                $this->config->getExpires(),
-                $this->config->getRefreshToken()
-            );
+            $accessToken = $this->config->getAccessToken();
         } elseif (! empty($this->config->getRefreshToken())) {
             $accessToken = $this->refreshToken();
         } else {
@@ -58,7 +52,7 @@ class Oauth extends AbstractApi
     /**
      * Returns an access token for the grant type "authorization_code".
      *
-     * @return AccessToken
+     * @return string
      */
     public function getTokenByCode(array $headers = [])
     {
@@ -75,13 +69,13 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
+        return $resBody['access_token'];
     }
 
     /**
      * Returns an access token for the grant type "client_credentials".
      *
-     * @return AccessToken
+     * @return string
      */
     public function getTokenByClientCredentials(array $headers = [])
     {
@@ -93,7 +87,7 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']));
+        return $resBody['access_token'];
     }
 
     /**
@@ -101,7 +95,7 @@ class Oauth extends AbstractApi
      *
      * @param string $refreshToken
      *
-     * @return AccessToken
+     * @return string
      */
     public function refreshToken(array $headers = [])
     {
@@ -117,11 +111,6 @@ class Oauth extends AbstractApi
 
         $resBody = $this->post('oauth/token', $params, $headers);
 
-        return new AccessToken($resBody['access_token'], $resBody['token_type'], self::setExpires($resBody['expires_in']), $resBody['refresh_token']);
-    }
-
-    protected static function setExpires(int $expires_in = 0)
-    {
-        return time() + $expires_in;
+        return $resBody['access_token'];
     }
 }

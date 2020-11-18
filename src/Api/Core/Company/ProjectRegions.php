@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MoabTech\Procore\Api;
+namespace MoabTech\Procore\Api\Core\Company;
 
+use MoabTech\Procore\Api\ApiInterface;
+use MoabTech\Procore\Api\CompaniesAbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class ProjectBidTypes extends CompaniesAbstractApi implements ApiInterface
+class ProjectRegions extends CompaniesAbstractApi implements ApiInterface
 {
     public function list(array $params = [], array $headers = [])
     {
@@ -53,11 +55,11 @@ class ProjectBidTypes extends CompaniesAbstractApi implements ApiInterface
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'project_bid_types', ...$parts);
+        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'project_regions', ...$parts);
     }
 
     protected function buildParams($params)
     {
-        return ['project_bid_type' => $params];
+        return ['project_region' => $params];
     }
 }

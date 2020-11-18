@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MoabTech\Procore\Api;
+namespace MoabTech\Procore\Api\Core\Company;
 
+use MoabTech\Procore\Api\CompaniesAbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class Roles extends CompaniesAbstractApi implements ApiInterface
+class SubmittalStatuses extends CompaniesAbstractApi
 {
     public function list(array $headers = [])
     {
@@ -24,6 +25,6 @@ class Roles extends CompaniesAbstractApi implements ApiInterface
      */
     protected function buildUri()
     {
-        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'roles');
+        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'submittal_statuses');
     }
 }

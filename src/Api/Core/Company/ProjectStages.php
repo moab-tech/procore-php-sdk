@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
-namespace MoabTech\Procore\Api;
+namespace MoabTech\Procore\Api\Core\Company;
 
+use MoabTech\Procore\Api\ApiInterface;
+use MoabTech\Procore\Api\CompaniesAbstractApi;
 use MoabTech\Procore\HttpClient\Util\UriBuilder;
 
-class ProjectOwnerTypes extends CompaniesAbstractApi implements ApiInterface
+class ProjectStages extends CompaniesAbstractApi implements ApiInterface
 {
     public function list(array $params = [], array $headers = [])
     {
         $resolver = $this->createOptionsResolver();
+        $resolver->setDefined('project_id')->setAllowedTypes('project_id', 'int');
+        if (null !== $this->getClient()->getProjectId() && ! array_key_exists('project_id', $params)) {
+            array_merge(['project_id' => $this->getClient()->getProjectId()], $params);
+        }
         $uri = $this->buildUri();
 
         return $this->get($uri, $resolver->resolve($params), $headers);
@@ -53,11 +59,11 @@ class ProjectOwnerTypes extends CompaniesAbstractApi implements ApiInterface
      */
     protected function buildUri(string ...$parts)
     {
-        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'project_owner_types', ...$parts);
+        return UriBuilder::build('companies', (string) $this->getClient()->getCompanyId(), 'project_stages', ...$parts);
     }
 
     protected function buildParams($params)
     {
-        return ['project_owner_type' => $params];
+        return ['project_stage' => $params];
     }
 }

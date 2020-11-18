@@ -43,7 +43,7 @@ abstract class AbstractApi
      *
      * @var int|null
      */
-    private $prefix = '/vapid/';
+    private $prefix = '/rest/v1.0/';
 
     /**
      * Create a new API instance.

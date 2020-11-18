@@ -6,20 +6,9 @@ use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
-use MoabTech\Procore\Api\Companies;
-use MoabTech\Procore\Api\ConstructionVolume;
+use MoabTech\Procore\Api\Core\CoreResources;
 use MoabTech\Procore\Api\Me;
 use MoabTech\Procore\Api\Oauth;
-use MoabTech\Procore\Api\Offices;
-use MoabTech\Procore\Api\Programs;
-use MoabTech\Procore\Api\ProjectBidTypes;
-use MoabTech\Procore\Api\ProjectOwnerTypes;
-use MoabTech\Procore\Api\ProjectRegions;
-use MoabTech\Procore\Api\ProjectStages;
-use MoabTech\Procore\Api\ProjectTypes;
-use MoabTech\Procore\Api\Roles;
-use MoabTech\Procore\Api\SubmittalStatuses;
-use MoabTech\Procore\Api\Uploads;
 use MoabTech\Procore\Config\Configuration;
 use MoabTech\Procore\Exception\ConfigurationException;
 use MoabTech\Procore\HttpClient\Builder;
@@ -30,6 +19,8 @@ use MoabTech\Procore\HttpClient\Plugin\ProcoreHeaders;
 
 class Client
 {
+    use CoreResources;
+
     /**
      * The default user agent header.
      *
@@ -61,7 +52,7 @@ class Client
     /**
      * The current access token
      *
-     * @var AccessToken
+     * @var string
      */
     private $accessToken;
 
@@ -71,6 +62,13 @@ class Client
      * @var int
      */
     private $companyId;
+
+    /**
+     * The current project
+     *
+     * @var int
+     */
+    private $projectId;
 
     /**
      * Client constructor.
@@ -104,102 +102,6 @@ class Client
     }
 
     /**
-     * @return Companies
-     */
-    public function companies()
-    {
-        return new Companies($this);
-    }
-
-    /**
-     * @return Offices
-     */
-    public function offices()
-    {
-        return new Offices($this);
-    }
-
-    /**
-     * @return Programs
-     */
-    public function programs()
-    {
-        return new Programs($this);
-    }
-
-    /**
-     * @return ProjectBidTypes
-     */
-    public function projectBidTypes()
-    {
-        return new ProjectBidTypes($this);
-    }
-
-    /**
-     * @return ProjectOwnerTypes
-     */
-    public function projectOwnerTypes()
-    {
-        return new ProjectOwnerTypes($this);
-    }
-
-    /**
-     * @return ProjectRegions
-     */
-    public function projectRegions()
-    {
-        return new ProjectRegions($this);
-    }
-
-    /**
-     * @return ProjectStages
-     */
-    public function projectStages()
-    {
-        return new ProjectStages($this);
-    }
-
-    /**
-     * @return ProjectTypes
-     */
-    public function projectTypes()
-    {
-        return new ProjectTypes($this);
-    }
-
-    /**
-     * @return Roles
-     */
-    public function roles()
-    {
-        return new Roles($this);
-    }
-
-    /**
-     * @return SubmittalStatuses
-     */
-    public function SubmittalStatuses()
-    {
-        return new SubmittalStatuses($this);
-    }
-
-    /**
-     * @return Uploads
-     */
-    public function uploads()
-    {
-        return new Uploads($this);
-    }
-
-    /**
-     * @return ConstructionVolume
-     */
-    public function constructionVolume()
-    {
-        return new ConstructionVolume($this);
-    }
-
-    /**
      * Authenticate a user for all next requests.
      *
      * @return $this
@@ -212,7 +114,7 @@ class Client
         $this->accessToken = $authService->getToken();
 
         $this->getHttpClientBuilder()->removePlugin(AuthHeaders::class);
-        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()->getValue()));
+        $this->getHttpClientBuilder()->addPlugin(new AuthHeaders($this->getAccessToken()));
 
         $this->setUrl($this->config->getBaseUrl());
 
@@ -233,6 +135,22 @@ class Client
         if ($companyId) {
             $this->getHttpClientBuilder()->addPlugin(new ProcoreHeaders($companyId));
             $this->companyId = $companyId;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set a project id for all next requests.
+     *
+     * @param int      $projectId
+     *
+     * @return $this
+     */
+    public function forProject(?int $projectId = null)
+    {
+        if ($projectId) {
+            $this->projectId = $projectId;
         }
 
         return $this;
@@ -272,20 +190,17 @@ class Client
      *
      * @param string $refreshToken
      *
-     * @return Authentication\AccessToken
+     * @return string
      *
      * @throws ConfigurationException
      */
     public function refreshToken($refreshToken = null)
     {
-        if (isset($refreshToken)) {
-            $rToken = $refreshToken;
-        } elseif (! isset($refreshToken) && ! isset($this->accessToken)) {
+        if (! isset($refreshToken)) {
             throw new ConfigurationException('There is no refresh token');
-        } else {
-            $rToken = $this->accessToken->getRefreshToken();
         }
-        $this->accessToken = $this->oauth->refreshToken($rToken);
+
+        $this->accessToken = $this->oauth->refreshToken($refreshToken);
 
         return $this->accessToken;
     }
@@ -293,7 +208,7 @@ class Client
     /**
      * Get the access token.
      *
-     * @return AccessToken|null
+     * @return string|null
      */
     public function getAccessToken()
     {
@@ -303,6 +218,11 @@ class Client
     public function getCompanyId()
     {
         return $this->companyId;
+    }
+
+    public function getProjectId()
+    {
+        return $this->projectId;
     }
 
     /**
