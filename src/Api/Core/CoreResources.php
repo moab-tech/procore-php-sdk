@@ -16,6 +16,7 @@ use MoabTech\Procore\Api\Core\Company\Roles;
 use MoabTech\Procore\Api\Core\Company\SubmittalStatuses;
 use MoabTech\Procore\Api\Core\Company\Trades;
 use MoabTech\Procore\Api\Core\CompanyDirectory\CompaniesInsurances;
+use MoabTech\Procore\Api\Core\Portfolio\Projects;
 
 trait CoreResources
 {
@@ -134,5 +135,15 @@ trait CoreResources
     public function companiesInsurances()
     {
         return new CompaniesInsurances($this);
+    }
+
+    // PORTFOLIO
+
+    /**
+     * @return projects
+     */
+    public function projects()
+    {
+        return new Projects($this);
     }
 }
